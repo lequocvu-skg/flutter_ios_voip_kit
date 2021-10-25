@@ -16,12 +16,12 @@ typedef OnAudioSessionStateChanged = void Function(bool active);
 
 class FlutterIOSVoIPKit {
   static FlutterIOSVoIPKit get instance => _getInstance();
-  static late FlutterIOSVoIPKit _instance;
+  static FlutterIOSVoIPKit? _instance;
   static FlutterIOSVoIPKit _getInstance() {
     if (_instance == null) {
       _instance = FlutterIOSVoIPKit._internal();
     }
-    return _instance;
+    return _instance!;
   }
 
   factory FlutterIOSVoIPKit() => _getInstance();
