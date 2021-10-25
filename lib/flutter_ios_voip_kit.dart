@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_ios_voip_kit/call_state_type.dart';
 import 'package:flutter_ios_voip_kit/channel_type.dart';
@@ -17,7 +16,7 @@ typedef OnAudioSessionStateChanged = void Function(bool active);
 
 class FlutterIOSVoIPKit {
   static FlutterIOSVoIPKit get instance => _getInstance();
-  static FlutterIOSVoIPKit _instance;
+  static late FlutterIOSVoIPKit _instance;
   static FlutterIOSVoIPKit _getInstance() {
     if (_instance == null) {
       _instance = FlutterIOSVoIPKit._internal();
@@ -38,18 +37,18 @@ class FlutterIOSVoIPKit {
   }
 
   /// [onDidReceiveIncomingPush] is not called when the app is not running, because app is not yet running when didReceiveIncomingPushWith is called.
-  IncomingPush onDidReceiveIncomingPush;
+  late IncomingPush onDidReceiveIncomingPush;
 
   /// [onDidAcceptIncomingCall] and [onDidRejectIncomingCall] can be called even if the app is not running.
   /// This is because the app is already running when the incoming call screen is displayed for CallKit.
   /// If not called, make sure the app is calling [onDidAcceptIncomingCall] and [onDidRejectIncomingCall] in the Dart class(ex: main.dart) that is called immediately after the app is launched.
-  IncomingAction onDidAcceptIncomingCall;
-  IncomingAction onDidRejectIncomingCall;
-  OnUpdatePushToken onDidUpdatePushToken;
+  late IncomingAction onDidAcceptIncomingCall;
+  late IncomingAction onDidRejectIncomingCall;
+  late OnUpdatePushToken onDidUpdatePushToken;
 
-  OnAudioSessionStateChanged onAudioSessionStateChanged;
+  late OnAudioSessionStateChanged onAudioSessionStateChanged;
 
-  StreamSubscription<dynamic> _eventSubscription;
+  StreamSubscription<dynamic>? _eventSubscription;
 
   Future<void> dispose() async {
     print('🎈 dispose');
@@ -59,7 +58,7 @@ class FlutterIOSVoIPKit {
 
   /// method channel
 
-  Future<String> getVoIPToken() async {
+  Future<String?> getVoIPToken() async {
     print('🎈 getVoIPToken');
 
     if (Platform.isAndroid) {
@@ -69,7 +68,7 @@ class FlutterIOSVoIPKit {
     return await _channel.invokeMethod('getVoIPToken');
   }
 
-  Future<String> getIncomingCallerName() async {
+  Future<String?> getIncomingCallerName() async {
     print('🎈 getIncomingCallerName');
 
     if (Platform.isAndroid) {
@@ -80,8 +79,8 @@ class FlutterIOSVoIPKit {
   }
 
   Future<void> startCall({
-    @required String uuid,
-    @required String targetName,
+    required String uuid,
+    required String targetName,
   }) async {
     print('🎈 startCall');
 
@@ -106,7 +105,7 @@ class FlutterIOSVoIPKit {
   }
 
   Future<void> acceptIncomingCall({
-    @required CallStateType callerState,
+    required CallStateType callerState,
   }) async {
     print('🎈 acceptIncomingCall');
 
@@ -121,8 +120,8 @@ class FlutterIOSVoIPKit {
 
   Future<void> unansweredIncomingCall({
     bool skipLocalNotification = false,
-    @required String missedCallTitle,
-    @required String missedCallBody,
+    required String missedCallTitle,
+    required String missedCallBody,
   }) async {
     print(
       '🎈 unansweredIncomingCall $skipLocalNotification, $missedCallTitle, $missedCallBody',
@@ -149,7 +148,7 @@ class FlutterIOSVoIPKit {
     return await _channel.invokeMethod('callConnected');
   }
 
-  Future<bool> requestAuthLocalNotification() async {
+  Future<bool?> requestAuthLocalNotification() async {
     print('🎈 requestAuthLocalNotification');
 
     if (Platform.isAndroid) {
@@ -160,7 +159,7 @@ class FlutterIOSVoIPKit {
     return result['granted'];
   }
 
-  Future<NotificationSettings> getLocalNotificationsSettings() async {
+  Future<NotificationSettings?> getLocalNotificationsSettings() async {
     print('🎈 getLocalNotificationsSettings');
 
     if (Platform.isAndroid) {
@@ -172,9 +171,9 @@ class FlutterIOSVoIPKit {
   }
 
   Future<void> testIncomingCall({
-    @required String uuid,
-    @required String callerId,
-    @required String callerName,
+    required String uuid,
+    required String callerId,
+    required String callerName,
   }) async {
     print('🎈 testIncomingCall: $uuid, $callerId, $callerName');
 

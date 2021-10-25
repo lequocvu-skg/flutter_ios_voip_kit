@@ -122,7 +122,7 @@ class _SelectCallRollState extends State<SelectCallRoll> {
   }
 
   Widget _button({
-    @required bool isCaller,
+    required bool isCaller,
   }) {
     return SizedBox(
       width: 140,

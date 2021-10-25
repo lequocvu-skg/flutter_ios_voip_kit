@@ -17,7 +17,7 @@ class _IncomingCallPageState extends State<IncomingCallPage> {
   final voIPKit = FlutterIOSVoIPKit.instance;
   var dummyCallId = '123456';
   var dummyCallerName = 'Dummy Tester';
-  Timer timeOutTimer;
+  Timer? timeOutTimer;
   bool isTalking = false;
 
   @override
@@ -100,7 +100,7 @@ class _IncomingCallPageState extends State<IncomingCallPage> {
                 : Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
-                      FutureBuilder<String>(
+                      FutureBuilder<String?>(
                         future: voIPKit.getVoIPToken(),
                         builder: (context, snapshot) {
                           return GestureDetector(
@@ -111,7 +111,7 @@ class _IncomingCallPageState extends State<IncomingCallPage> {
 
                               final data = ClipboardData(text: snapshot.data);
                               await Clipboard.setData(data);
-                              Scaffold.of(context).showSnackBar(
+                              ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                   content: Text(
                                     '✅ Copy to VoIP device Token for APNs',
