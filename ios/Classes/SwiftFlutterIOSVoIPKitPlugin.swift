@@ -140,10 +140,10 @@ extension SwiftFlutterIOSVoIPKitPlugin: UNUserNotificationCenterDelegate {
 
     // MARK: - Local Notification
 
-    public func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        // notify when foreground
-        completionHandler([])
-    }
+    // public func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+    //     // notify when foreground
+    //     completionHandler([])
+    // }
 }
 
 extension SwiftFlutterIOSVoIPKitPlugin: FlutterPlugin {
