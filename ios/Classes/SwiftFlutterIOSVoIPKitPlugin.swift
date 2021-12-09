@@ -105,13 +105,13 @@ public class SwiftFlutterIOSVoIPKitPlugin: NSObject {
             }
         }
     }
-    
+
     public func getLocalNotificationsSettings(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         notificationCenter.getNotificationSettings { settings in
             result(settings.toMap())
         }
     }
-    
+
     private func testIncomingCall(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
         guard let args = call.arguments as? [String: Any],
             let uuid = args["uuid"] as? String,
@@ -142,7 +142,7 @@ extension SwiftFlutterIOSVoIPKitPlugin: UNUserNotificationCenterDelegate {
 
     public func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
         // notify when foreground
-        completionHandler([.alert])
+        completionHandler([])
     }
 }
 
