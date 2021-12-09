@@ -22,7 +22,7 @@ public class SwiftFlutterIOSVoIPKitPlugin: NSObject {
     // MARK: - Local Notification
 
     private let notificationCenter = UNUserNotificationCenter.current()
-    private let options: UNAuthorizationOptions = [.alert]
+    private let options: UNAuthorizationOptions = []
 
     // MARK: - method channel
 
@@ -136,15 +136,15 @@ public class SwiftFlutterIOSVoIPKitPlugin: NSObject {
     }
 }
 
-// extension SwiftFlutterIOSVoIPKitPlugin: UNUserNotificationCenterDelegate {
+extension SwiftFlutterIOSVoIPKitPlugin: UNUserNotificationCenterDelegate {
 
-//     // MARK: - Local Notification
+    // MARK: - Local Notification
 
-//     // public func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-//     //     // notify when foreground
-//     //     completionHandler([])
-//     // }
-// }
+    public func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        // notify when foreground
+        completionHandler([.alert])
+    }
+}
 
 extension SwiftFlutterIOSVoIPKitPlugin: FlutterPlugin {
 
