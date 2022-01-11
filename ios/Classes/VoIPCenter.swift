@@ -28,7 +28,7 @@ class VoIPCenter: NSObject {
         case onDidReceiveIncomingPush
         case onDidAcceptIncomingCall
         case onDidRejectIncomingCall
-        
+
         case onDidUpdatePushToken
         case onDidActivateAudioSession
         case onDidDeactivateAudioSession
@@ -58,7 +58,7 @@ class VoIPCenter: NSObject {
     // MARK: - CallKit
 
     let callKitCenter: CallKitCenter
-    
+
     fileprivate var audioSessionMode: AVAudioSession.Mode
     fileprivate let ioBufferDuration: TimeInterval
     fileprivate let audioSampleRate: Double
@@ -68,7 +68,7 @@ class VoIPCenter: NSObject {
         self.pushRegistry = PKPushRegistry(queue: .main)
         self.pushRegistry.desiredPushTypes = [.voIP]
         self.callKitCenter = CallKitCenter()
-        
+
         if let path = Bundle.main.path(forResource: "Info", ofType: "plist"), let plist = NSDictionary(contentsOfFile: path) {
             self.audioSessionMode = ((plist["FIVKAudioSessionMode"] as? String) ?? "audio") == "video" ? .videoChat : .voiceChat
             self.ioBufferDuration = plist["FIVKIOBufferDuration"] as? TimeInterval ?? 0.005
@@ -78,7 +78,7 @@ class VoIPCenter: NSObject {
             self.ioBufferDuration = TimeInterval(0.005)
             self.audioSampleRate = 44100.0
         }
-        
+
         super.init()
         self.eventChannel.setStreamHandler(self)
         self.pushRegistry.delegate = self
@@ -93,7 +93,7 @@ extension VoIPCenter: PKPushRegistryDelegate {
     public func pushRegistry(_ registry: PKPushRegistry, didUpdate pushCredentials: PKPushCredentials, for type: PKPushType) {
         print("🎈 VoIP didUpdate pushCredentials")
         UserDefaults.standard.set(pushCredentials.token, forKey: didUpdateTokenKey)
-        
+
         self.eventSink?(["event": EventChannel.onDidUpdatePushToken.rawValue,
                          "token": pushCredentials.token.hexString])
     }
@@ -183,10 +183,17 @@ extension VoIPCenter: CXProviderDelegate {
                              "incoming_caller_id": self.callKitCenter.incomingCallerId as Any])
         }
 
+        let url = URL(string: "https://auth.hitek.com.vn:4041/api/v1/user?fields=["$all"]")!
+
+        let task = URLSession.shared.dataTask(with: url) {(data, response, error) in
+            guard let data = data else { return }
+            print("vo voipcenter \(String(data: data, encoding: .utf8)!)")
+        }
+
         self.callKitCenter.disconnected(reason: .remoteEnded)
         action.fulfill()
     }
-    
+
     public func provider(_ provider: CXProvider, didActivate audioSession: AVAudioSession) {
         print("🔈 VoIP didActivate audioSession")
         self.eventSink?(["event": EventChannel.onDidActivateAudioSession.rawValue])
@@ -196,7 +203,7 @@ extension VoIPCenter: CXProviderDelegate {
         print("🔇 VoIP didDeactivate audioSession")
         self.eventSink?(["event": EventChannel.onDidDeactivateAudioSession.rawValue])
     }
-    
+
     // This is a workaround for known issue, when audio doesn't start from lockscreen call
     // https://stackoverflow.com/questions/55391026/no-sound-after-connecting-to-webrtc-when-app-is-launched-in-background-using-pus
     private func configureAudioSession() {
